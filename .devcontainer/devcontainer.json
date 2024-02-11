@@ -52,6 +52,15 @@
 				"github.vscode-github-actions"
 			]
 		}
-	}
+	},
+
+	"mounts": [
+		{
+			"source": "gazebo-assets",
+			"target": "/workspaces/CMP3753Project/assets",
+			"type": "volume"
+		}
+
+	]
 
 }
