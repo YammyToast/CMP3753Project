@@ -1,3 +1,0 @@
-int64 copland_id
-int64 start_time
-int64 random_state
