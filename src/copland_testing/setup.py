@@ -20,7 +20,9 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'copland_main = copland_testing.copland_main:main'
+            'copland_main = copland_testing.copland_main:main',
+            'copland_metrics = copland_testing.copland_metrics:main',
+            'copland_environment = copland_testing.copland_environment:main'
         ],
     },
 )

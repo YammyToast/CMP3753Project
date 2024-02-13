@@ -1,0 +1,3 @@
+uint64 sim_id
+uint64 sim_timeout
+string algorithm_specifier

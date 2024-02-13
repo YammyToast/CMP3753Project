@@ -1,5 +1,5 @@
 string node_name
 ---
 string copland_id
-int64 start_time
-int64 random_state
+uint64 start_time
+uint64 random_state
