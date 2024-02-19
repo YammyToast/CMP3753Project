@@ -1,3 +1,4 @@
 string sim_id
 uint64 sim_timeout
-string algorithm_specifier
+string algorithm_coverage
+string algorithm_pathing
