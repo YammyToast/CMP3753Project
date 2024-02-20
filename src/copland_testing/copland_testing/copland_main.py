@@ -53,8 +53,6 @@ class CoplandMain(Node):
         return __response
 
     def publish_new_sim(self, __algorithm_coverage: str, __algorithm_pathing: str, __sim_timeout = 600):
-
-
         msg = NewSim()
         # Sim_ID is combination of session id and then an incrementing number
         msg.sim_id = str(f"{self.id}{self.sim_counter}")
@@ -72,7 +70,7 @@ class CoplandMain(Node):
         while True:
             if self.publish_new_sim('interiorscrew', 'astar') == True:
                 break;
-            # self.get_logger().info("Not ready, waiting to create new sim.")
+            self.get_logger().info("Not ready, waiting to create new sim.")
 
 
 def main(args=None):
