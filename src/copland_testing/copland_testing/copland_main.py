@@ -10,9 +10,6 @@ from coplandnavi_interfaces.srv import SetupArgs
 from coplandnavi_interfaces.msg import NewSim, EndSim
 import rclpy
 
-
-
-
 REQUIRED_NODES = ["copland_metrics", "copland_environment"]
 READY = lambda x: all(elem in x for elem in REQUIRED_NODES)
 

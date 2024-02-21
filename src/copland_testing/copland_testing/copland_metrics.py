@@ -4,8 +4,18 @@ from coplandnavi_interfaces.msg import NewSim, EndSim
 import rclpy
 
 from tinydb import TinyDB, Query
+TinyDB.default_table_name = 'metrics'
 
 from dataclasses import dataclass
+
+"""
+Proposed Metrics
+----
+Coverage(%)
+Percentage Cleaned(%)
+Seconds Elapsed(int)
+Collision Rate(%)
+"""
 
 """
 Use TinyDB to store all logs in one file.
@@ -35,9 +45,28 @@ class DBSchema:
 
 
 class CoplandMetrics(Node):
+    """Metrics node for the automated testing plan.
+
+    Listens on all simulation metrics broadcasting channels, grouping values based on the perceived current simulation.
+    Performs calculation of evaluation metrics from the compiled data, and writes results into a session-based TinyDB JSON file.
+
+    Each copland session will spawn a JSON database with the same id as the copland session, which contains rows each corresponding to one iteration of the simulated environment.
+    The database is implemented such that each row inserted must follow the DBSchema. Which alongside the evaluation metrics, adds additional Primary and Secondary keys to the records.
+
+    Metrics listens to start_sim and end_sim broadcasts to determine when new entries should be started. On an end_sim call, the current working dataset is flushed into the database, and a new row/dataset is created.
+    """
+
     def __init__(self):
         super().__init__("copland_metrics")
         self.setup_cli = self.create_client(SetupArgs, "setup_args")
+
+        self.new_sim_subscriber_ = self.create_subscription(
+            NewSim, "new_sim", self.handle_new_sim, 2
+        )
+        self.end_sim_subscriber_ = self.create_subscription(
+            EndSim, "end_sim", self.handle_end_sim, 2
+        )
+
 
         while not self.setup_cli.wait_for_service(timeout_sec=1.0):
             self.get_logger().info("copland_main service not found. waiting...")
@@ -46,12 +75,6 @@ class CoplandMetrics(Node):
         self.setup_req = SetupArgs.Request()
         self.setup_args = self.send_setup_args_request()
         self.get_logger().info(f"Setup Args Complete. ")
-        self.new_sim_subscriber_ = self.create_subscription(
-            NewSim, "new_sim", self.handle_new_sim, 2
-        )
-        self.end_sim_subscriber_ = self.create_subscription(
-            EndSim, "end_sim", self.handle_end_sim, 2
-        )
 
 
     def insert_db_row(self, __db_row: DBSchema):
@@ -76,12 +99,10 @@ class CoplandMetrics(Node):
     def handle_new_sim(self, __msg):
         # self.get_logger().info(f'New Sim: {__msg}')
         self.get_logger().info(
-            f"Starting New Sim. ID: {__msg.sim_id}, Coverage: {__msg.algorithm_coverage}, Pathing: {__msg.algorithm_pathing}"
+            f"Metrics New Sim ID: {__msg.sim_id}, Coverage: {__msg.algorithm_coverage}, Pathing: {__msg.algorithm_pathing}"
         )
         self.current_metrics_row = DBSchema(
-            __msg.sim_id,
-            __msg.algorithm_coverage,
-            __msg.algorithm_pathing
+            __msg.sim_id, __msg.algorithm_coverage, __msg.algorithm_pathing
         )
 
         ## REMOVE
@@ -89,6 +110,10 @@ class CoplandMetrics(Node):
 
     def handle_end_sim(self, __msg):
         self.get_logger().info(f"End Sim. Current Metrics: {self.current_metrics_row}")
+
+        # Complete Remaining Attributes before pushing.
+        # ID, and algorithm names are added at simulation start as they are constant.
+        # self.current_metrics_row ...
 
     def send_setup_args_request(self):
         # Replace with self node_name attribute if it exists
@@ -103,16 +128,6 @@ class CoplandMetrics(Node):
         self.get_logger().info(f"Creating metrics session database: {db_name}")
         self.db = TinyDB(db_name)
         return self.setup_future.result()
-
-
-"""
-Proposed Metrics
-----
-Coverage(%)
-Percentage Cleaned(%)
-Seconds Elapsed(int)
-Collision Rate(%)
-"""
 
 
 def main(args=None):
