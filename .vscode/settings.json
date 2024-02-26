@@ -4,5 +4,6 @@
         "NAVI",
         "pathing",
         "rclpy"
-    ]
+    ],
+    "cmake.sourceDirectory": "/home/yammy/Code/CMP3753Project/build/coplandnavi_interfaces/coplandnavi_interfaces__py"
 }
