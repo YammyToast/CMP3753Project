@@ -1,0 +1,1 @@
+find . -name '*.json' -delete

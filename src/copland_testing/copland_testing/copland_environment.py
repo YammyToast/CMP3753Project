@@ -4,7 +4,8 @@ import rclpy
 
 from coplandnavi_interfaces.msg import NewSim, EndSim
 
-import subprocess
+import subprocess, os
+env = os.environ.copy()
 
 class CoplandEnvironment(Node):
     def __init__(self):
@@ -35,12 +36,16 @@ class CoplandEnvironment(Node):
         return self.setup_future.result()
 
     def handle_new_sim(self, __msg):
-        # self.get_logger().info(f"New Sim: {__msg}")
-        self.sim_handle = subprocess.Popen(["ros2", "launch", "turtlebot3_gazebo", "turtlebot3_world.launch.py"])
-        # self.sim_start = 
-        self.get_logger().info(f"sim_handle: {self.sim_handle}")
-        
-        # self.get_logger().info(sim_handle)
+        try:
+                
+            # ==== Environment Launch        
+            self.sim_handle = subprocess.Popen(["ros2", "launch", "turtlebot3_gazebo", "turtlebot3_world.launch.py"], env=env)            
+            # ==== END
+            self.get_logger().info("Setting up Environment Exports.")
+
+            self.get_logger().info(f"sim_handle: {self.sim_handle}")
+        except Exception as e:
+            self.get_logger().error(f"Error creating new sim: {e}")
 
     def handle_end_sim(self, __msg):
         self.get_logger().info(f"End Sim: {__msg}")
