@@ -14,6 +14,9 @@ class Coins(Enum):
     #===============#
     INIT_FAIL=-1
 
+class StateError(Exception):
+    pass
+
 # ==============================================
 # Algorithms
 # ==============================================
@@ -22,5 +25,6 @@ class PathFindingAlgorithms(Enum):
 
 class PathCoverageAlgorithms(Enum):
     INTERIORSCREW=0
+
 
 state_qos = QoSProfile(depth=1, durability=QoSDurabilityPolicy.TRANSIENT_LOCAL)

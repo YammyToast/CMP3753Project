@@ -5,7 +5,7 @@ import rclpy
 from coplandnavi_interfaces.msg import NewSim, EndSim
 
 import subprocess, os
-env = os.environ.copy()
+
 
 class CoplandEnvironment(Node):
     def __init__(self):
@@ -38,8 +38,12 @@ class CoplandEnvironment(Node):
     def handle_new_sim(self, __msg):
         try:
                 
+            # ==== Set Gazebo Models
+            os.environ["GAZEBO_MODEL_PATH"] = "`ros2 pkg prefix turtlebot3_gazebo`/share/turtlebot3_gazebo/models/"
+            os.environ["TURTLEBOT3_MODEL"] = "burger"     
+            os.environ["ROS_DOMAIN_ID"] = "1"
             # ==== Environment Launch        
-            self.sim_handle = subprocess.Popen(["ros2", "launch", "turtlebot3_gazebo", "turtlebot3_world.launch.py"], env=env)            
+            self.sim_handle = subprocess.Popen(["ros2", "launch", "turtlebot3_gazebo", "turtlebot3_world.launch.py"])       
             # ==== END
             self.get_logger().info("Setting up Environment Exports.")
 

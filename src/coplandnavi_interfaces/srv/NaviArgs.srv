@@ -1,6 +1,6 @@
 string node_name
 ---
-uint8 finding_algorithm_name
+uint8 finding_algorithm
 string finding_algorithm_parameters
-uint8 coverage_algorithm_name
+uint8 coverage_algorithm
 string coverage_algorithm_parameters

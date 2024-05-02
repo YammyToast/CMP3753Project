@@ -1,8 +1,10 @@
 # CMP3753 Project 
+----
 
-## Testing (Copland?) Namespace
+EXPORT EVERYTHING BEFORE STARTING!
 
-## NAVI Namespace
+----
+
 
 # Backtracking Spiral Algorithm
 https://wiki.ros.org/full_coverage_path_planner

@@ -42,17 +42,19 @@ class NaviMain(Node):
 
         self.get_logger().info("Setup Args Complete.")
 
+        # ==== Navi States
         self._state_publisher = self.create_publisher(UInt8, "navi_state", state_qos)
+        self.create_subscription(UInt8, "navi_coins", callback=self.handle_state_change, qos_profile=state_qos)
 
-        # INITIALIZE STATE!
-        if self.change_state(States.INIT) == False:
-            raise Exception("Could not initialize base state.")
+
 
     def sync_checker(self):
         self.get_logger().info("Navi Waiting for Nodes...")
         if READY(self.service_list):
-            self.get_logger().info("Got all Nodes")
-
+            self.get_logger().info("All required navigation nodes found.")
+            # INITIALIZE STATE!
+            if self.change_state(States.INIT) == False:
+                raise Exception("Could not initialize base state.")
             self.navi_args_sync.destroy()
 
     def change_state(self, __state: States) -> bool:
@@ -98,8 +100,8 @@ class NaviMain(Node):
         self.get_logger().info("Navi Args Request: {}".format(__request.node_name))
         try:
             # ==== Response Building
-            __response.finding_algorithm_name = int(self.path_finding_algorithm.value)
-            __response.coverage_algorithm_name = int(self.path_coverage_algorithm.value)
+            __response.finding_algorithm = int(self.path_finding_algorithm.value)
+            __response.coverage_algorithm = int(self.path_coverage_algorithm.value)
             # ==== Add client to service list
             self.service_list.append(__request.node_name)
             # ==== Send Response
