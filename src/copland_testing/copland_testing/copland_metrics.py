@@ -124,7 +124,7 @@ class CoplandMetrics(Node):
         # Setup up DB at this point, as acknowledgement has not yet been returned.
         # This keeps the setup sync in check as the setup time is considered.
         copland_id = self.setup_future.result().copland_id
-        db_name = f"{copland_id}.json"
+        db_name = f"./metrics/{copland_id}.json"
         self.get_logger().info(f"Creating metrics session database: {db_name}")
         self.db = TinyDB(db_name)
         return self.setup_future.result()

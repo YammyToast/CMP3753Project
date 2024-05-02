@@ -29,6 +29,12 @@ def generate_launch_description():
             executable='navi_main',
             name='navi_main'
 
+        ),
+        Node(
+            package='navi',
+            namespace='coplandnavi',
+            executable='navi_navigation',
+            name='navi_navigation'
         )
 
     ])

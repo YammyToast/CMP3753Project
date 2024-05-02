@@ -27,6 +27,7 @@ find_package(rosidl_default_generators REQUIRED)
 
 rosidl_generate_interfaces(${PROJECT_NAME}
   "srv/SetupArgs.srv"
+  "srv/NaviArgs.srv"
   "msg/NewSim.msg"
   "msg/EndSim.msg"
 )
