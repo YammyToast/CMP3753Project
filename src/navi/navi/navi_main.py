@@ -21,6 +21,10 @@ READY = lambda x: all(elem in x for elem in REQUIRED_NODES)
 class NaviMain(Node):
     def __init__(self):
         super().__init__("navi_main")
+        # ===== Parameters
+        self.declare_parameter('test_config', rclpy.Parameter.Type.STRING)
+        self.test_config_file = self.get_parameter('test_config')
+        self.get_logger().info(f"test_config file: {str(self.test_config_file.value)}")
         # ===== Setup Args
         self.setup_cli = self.create_client(SetupArgs, "setup_args")
         while not self.setup_cli.wait_for_service(timeout_sec=1.0):
